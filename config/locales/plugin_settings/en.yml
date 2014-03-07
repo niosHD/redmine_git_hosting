@@ -159,6 +159,7 @@ en:
   label_recycle_bin_content: Recycle bin content
   label_recycle_bin_content_size: Size
   label_delete_from_recyle_bin: Delete from recycle bin
+  label_restore_from_recyle_bin: Restore
   label_delete_warning: Warning! Deletion is forever!
 
   # Gitolite Rescue

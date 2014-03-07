@@ -9,12 +9,14 @@
     <th><%= l(:label_recycle_bin_content) %></th>
     <th><%= l(:label_recycle_bin_content_size) %></th>
     <th><%= l(:label_delete_from_recyle_bin) %> (<%= link_to l(:label_select_all), 'javascript:void(0);', :id => 'select_all_delete' %>)</th>
+    <th><%= l(:label_restore_from_recyle_bin) %> (<%= link_to l(:label_select_all), 'javascript:void(0);', :id => 'select_all_restore' %>)</th>
 
     <% recycle_bin.content.each do |repo_trash| %>
       <tr>
         <td><%= repo_trash[0] %></td>
         <td><%= repo_trash[1][:size] %></td>
         <td><%= check_box_tag "settings[gitolite_purge_repos][]",   repo_trash[0], false, :class => 'empty_trash' %></td>
+        <td><%= check_box_tag "settings[gitolite_restore_repos][]", repo_trash[0], false, :class => 'restore_trash' %></td>
       </tr>
     <% end %>
 
@@ -37,6 +39,19 @@
     }
   }
 
+  function checkSelection(element){
+    console.log($(element));
+    var element_id = $(element).attr('id');
+    if (element_id.indexOf("gitolite_purge_repos") !=-1) {
+      var conflict = element_id.replace("gitolite_purge_repos", "gitolite_restore_repos");
+    } else {
+      var conflict = element_id.replace("gitolite_restore_repos", "gitolite_purge_repos");
+    }
+
+    console.log(element_id);
+    console.log(conflict);
+  }
+
   $(document).ready(function() {
 
     $("#select_all_delete").on('click', function(){
@@ -46,9 +61,19 @@
       });
     });
 
-    $(".empty_trash").on('change', function(){
-      displayWarning();
+    $("#select_all_restore").on('click', function(){
+      $('.restore_trash').each(function(){
+        $(this).attr('checked', !$(this).attr('checked'));
+      });
     });
 
+    $(".empty_trash").on('change', function(){
+      displayWarning();
+      checkSelection(this);
+    });
+
+    $(".restore_trash").on('change', function(){
+      checkSelection(this);
+    });
   });
 <% end %>
